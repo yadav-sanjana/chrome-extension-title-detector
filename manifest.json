@@ -1,0 +1,22 @@
+{
+    "name": "Title detector",
+    "description": "Extension that pickups the title of the current tab and show it in the pop up itself",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "icons": {
+        "16": "images/image_s.png",
+        "32": "images/image_m.png",
+        "48": "images/image_l.png"
+    }
+}
