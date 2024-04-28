@@ -31,7 +31,7 @@ This Chrome extension automatically picks up the title of the current tab and di
 
 ## Explanation Video
 
-Watch a brief explanation video of the code and how the extension works [here](https://drive.google.com/drive/folders/1WxOBfinQlgSIu579nUwk1xsBcnD0GeWB?usp=drive_link)
+Watch a brief explanation video of the code and how the extension works [here](https://drive.google.com/file/d/1OqvgCnXmCpCTRxhSbjn0JKwMzNu1sIoT/view?usp=sharing)
 
 ## License
 
