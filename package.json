@@ -1,0 +1,25 @@
+{
+  "name": "chrome-extension-title-detector",
+  "version": "1.0.0",
+  "description": "This Chrome extension automatically picks up the title of the current tab and displays it in the popup when a button is clicked.",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yadav-sanjana/chrome-extension-title-detector.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yadav-sanjana/chrome-extension-title-detector/issues"
+  },
+  "homepage": "https://github.com/yadav-sanjana/chrome-extension-title-detector#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7",
+    "sequelize": "^6.37.3"
+  }
+}

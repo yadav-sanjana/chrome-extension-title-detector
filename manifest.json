@@ -1,5 +1,5 @@
 {
-    "name": "Title detector",
+    "name": "Title Detector",
     "description": "Extension that pickups the title of the current tab and show it in the pop up itself",
     "version": "1.0",
     "manifest_version": 3,
