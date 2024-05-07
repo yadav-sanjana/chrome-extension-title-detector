@@ -18,5 +18,15 @@
         "16": "images/image_s.png",
         "32": "images/image_m.png",
         "48": "images/image_l.png"
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://www.linkedin.com/*"
+            ],
+            "js": [
+                "contentScript.js"
+            ]
+        }
+    ]
 }

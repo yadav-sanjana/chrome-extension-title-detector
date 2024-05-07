@@ -17,7 +17,7 @@ export const ProfileModel = db.define('linkedIn_profile', {
         unique: true
     },
     about: {
-        type: DataTypes.TEXT
+        type: DataTypes.TEXT('long')
     },
     bio: {
         type: DataTypes.TEXT
@@ -26,11 +26,11 @@ export const ProfileModel = db.define('linkedIn_profile', {
         type: DataTypes.STRING
     },
     followerCount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         defaultValue: 0
     },
     connectionCount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         defaultValue: 0
     }
 }, {

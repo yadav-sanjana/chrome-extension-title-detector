@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Profile Scraper</title>
     <link rel="stylesheet" href="popup.css">
-    <title>Title Detector</title>
 </head>
-
 <body>
-    <div class="wrapper">
-        <header>
-            <h1>Title Detector</h1>
-            <p>Welcome to Title Detector</p>
-        </header>
-        <main>
-            <button class="changeTitleBtn">Detect Title</button>
-            <div class="titleDisplay"></div>
-        </main>
+    <div class="container">
+        <h1>LinkedIn Profile Scraper</h1>
+        <p>Enter LinkedIn profile links (separated by commas):</p>
+        <textarea id="profileLinks" rows="5" cols="50"></textarea>
+        <button id="extractProfilesBtn">Extract Profiles</button>
     </div>
     <script src="popup.js"></script>
 </body>
-
 </html>
