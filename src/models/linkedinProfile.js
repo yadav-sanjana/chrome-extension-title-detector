@@ -17,7 +17,7 @@ export const ProfileModel = db.define('linkedIn_profile', {
         unique: true
     },
     about: {
-        type: DataTypes.TEXT('long')
+        type: DataTypes.STRING
     },
     bio: {
         type: DataTypes.TEXT
