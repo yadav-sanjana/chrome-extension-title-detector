@@ -7,7 +7,7 @@ function extractProfileData() {
     profileData.name = nameElement ? nameElement.textContent.trim() : '';
 
     // Extract profile location
-    const locationElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card.CdCkuXmaFKvUiWIoHGHbgiEqIKqxME > div.ph5.pb5 > div.mt2.relative > div.mt2 > span.text-body-small.inline.t-black--light.break-words")
+    const locationElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card.abJtEcvlrbGMfCWrAWoJGmRUckJmgNOTItW > div.ph5.pb5 > div.mt2.relative > div.mgkLBZBXfwiSsQaHPlnaiyhJXtrsVvsPuWdpScsA.mt2 > span")
     profileData.location = locationElement ? locationElement.textContent.trim() : '';
 
     // Extract profile URL
@@ -26,7 +26,7 @@ function extractProfileData() {
     profileData.followerCount = followerCountElement ? followerCountElement.textContent.trim() : '';
 
     // Extract connection count as an integer
-    const connectionCountElement = document.querySelector("span[aria-hidden='true']");
+    const connectionCountElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card.abJtEcvlrbGMfCWrAWoJGmRUckJmgNOTItW > div.ph5.pb5 > ul > li > span > span")
     profileData.connectionCount = connectionCountElement ? connectionCountElement.textContent.trim() : '';
 
     return profileData;

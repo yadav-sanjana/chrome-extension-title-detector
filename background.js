@@ -3,15 +3,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === 'profileData') {
         // Received profile data from content script
         const profileData = message.data;
+        const tabId = sender.tab.id; 
         
         // Post profile data to API
         sendProfileDataToAPI(profileData)
-            .then(() => {
-                console.log('Profile data sent to API:', profileData);
-            })
-            .catch(error => {
-                console.error('Error sending profile data to API:', error);
-            });
+        .then(() => {
+            console.log('Profile data sent to API from tab ID:', tabId);
+        })
+        .catch(error => {
+            console.error('Error sending profile data to API from tab ID:', tabId, error);
+        });
     }
 });
 

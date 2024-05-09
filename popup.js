@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const extractProfilesBtn = document.getElementById('extractProfilesBtn');
     extractProfilesBtn.addEventListener('click', async () => {
+        scrapeProfiles();
+    });
+});
+
+async function scrapeProfiles() {
+    try {
         const profileLinksInput = document.getElementById('profileLinks').value;
         const profileLinks = profileLinksInput.split(',').map(link => link.trim());
         
@@ -9,12 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        await scrapeProfiles(profileLinks);
-    });
-});
-
-async function scrapeProfiles(profileLinks) {
-    try {
         for (let i = 0; i < profileLinks.length; i++) {
             const link = profileLinks[i];
 
@@ -43,7 +43,6 @@ async function scrapeProfiles(profileLinks) {
 }
 
 
-
 async function openTab(link) {
     return new Promise(resolve => {
         chrome.tabs.create({ url: link }, tab => {
@@ -51,7 +50,6 @@ async function openTab(link) {
         });
     });
 }
-
 async function waitForPageLoad(tabId) {
     return new Promise(resolve => {
         chrome.tabs.onUpdated.addListener(function listener(updatedTabId, changeInfo) {
@@ -80,16 +78,7 @@ async function extractProfileData(tabId) {
     });
 }
 
-async function closeTab(tabId) {
-    return new Promise(resolve => {
-        chrome.tabs.remove(tabId, () => {
-            resolve();
-        });
-    });
-}
-
 async function sendProfileDataToAPI(profileData) {
-    console.log(profileData);
     const response = await fetch('http://127.0.0.1:3000/profile', {
         method: 'POST',
         headers: {
@@ -100,4 +89,13 @@ async function sendProfileDataToAPI(profileData) {
     if (!response.ok) {
         throw new Error('Failed to send profile data to API');
     }
+}
+
+
+async function closeTab(tabId) {
+    return new Promise(resolve => {
+        chrome.tabs.remove(tabId, () => {
+            resolve();
+        });
+    });
 }
