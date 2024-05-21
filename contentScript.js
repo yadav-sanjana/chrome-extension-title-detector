@@ -1,37 +1,81 @@
-// Function to extract profile data from the LinkedIn profile page
-function extractProfileData() {
-    const profileData = {};
-
-    // Extract profile name
-    const nameElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card > div.ph5 > div.mt2.relative > div:nth-child(1) > div > span.artdeco-hoverable-trigger.artdeco-hoverable-trigger--content-placed-bottom.artdeco-hoverable-trigger--is-hoverable.ember-view")
-    profileData.name = nameElement ? nameElement.textContent.trim() : '';
-
-    // Extract profile location
-    const locationElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card.abJtEcvlrbGMfCWrAWoJGmRUckJmgNOTItW > div.ph5.pb5 > div.mt2.relative > div.mgkLBZBXfwiSsQaHPlnaiyhJXtrsVvsPuWdpScsA.mt2 > span")
-    profileData.location = locationElement ? locationElement.textContent.trim() : '';
-
-    // Extract profile URL
-    profileData.url = window.location.href;
-
-    // Extract about section
-    const aboutElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section:nth-child(3) > div.display-flex.ph5.pv3 >div >div > div >span.visually-hidden")
-    profileData.about = aboutElement ? aboutElement.textContent.trim() : '';
-
-    // Extract bio section
-    const bioElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card > div.ph5 > div.mt2.relative > div:nth-child(1) > div.text-body-medium.break-words")
-    profileData.bio = bioElement ? bioElement.textContent.trim() : '';
-
-    // Extract follower count as an integer
-    const followerCountElement = document.querySelector("span[aria-hidden='true']");
-    profileData.followerCount = followerCountElement ? followerCountElement.textContent.trim() : '';
-
-    // Extract connection count as an integer
-    const connectionCountElement = document.querySelector("#profile-content > div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile.pvs-loader-wrapper__shimmer--animate > div > div > main > section.artdeco-card.abJtEcvlrbGMfCWrAWoJGmRUckJmgNOTItW > div.ph5.pb5 > ul > li > span > span")
-    profileData.connectionCount = connectionCountElement ? connectionCountElement.textContent.trim() : '';
-
-    return profileData;
+function getPostIds(count) {
+  const posts = document.querySelectorAll('div[data-urn]');
+  const postIds = Array.from(posts).slice(0, count).map(post => post.getAttribute('data-urn'));
+  return postIds;
 }
 
-// Send extracted profile data back to the extension background script
-chrome.runtime.sendMessage({ type: 'profileData', data: extractProfileData() });
+function clickLikeButton(postUrn, count) {
+  let clicked = 0;
+  const interval = setInterval(() => {
+    const postElement = document.querySelector(`div[data-urn="${postUrn}"]`);
+    if (postElement) {
+      const likeButton = postElement.querySelector('button[aria-label*="Like"][aria-pressed="false"]');
+      if (likeButton && clicked < count) {
+        likeButton.click();
+        clicked++;
+      } else if (clicked >= count) {
+        clearInterval(interval);
+      }
+    } else {
+      clearInterval(interval);
+    }
+  }, 1000);
+}
 
+function commentPost(postUrn, commentText) {
+  try {
+    const postElement = document.querySelector(`div[data-urn="${postUrn}"]`);
+    if (postElement) {
+      const commentButton = postElement.querySelector('button[aria-label*="Comment"]');
+      if (commentButton) {
+        commentButton.click();
+
+        const interval = setInterval(() => {
+          const commentBox = postElement.querySelector('div.ql-editor');
+          if (commentBox) {
+            commentBox.innerHTML = commentText;
+            const event = new Event('input', { bubbles: true });
+            commentBox.dispatchEvent(event);
+
+            const submitButton = postElement.querySelector('button.comments-comment-box__submit-button');
+            if (submitButton) {
+              submitButton.click();
+              clearInterval(interval);
+              console.log(`Commented on post: ${postUrn}`);
+            }
+          }
+        }, 500);
+
+        setTimeout(() => clearInterval(interval), 10000);
+      } else {
+        console.log(`Comment button not found for post: ${postUrn}`);
+      }
+    } else {
+      console.log(`Post element not found for URN: ${postUrn}`);
+    }
+  } catch (error) {
+    console.error(`Error commenting on post ${postUrn}:`, error);
+  }
+}
+
+function interactWithPosts(likeCount, commentCount) {
+  const postUrns = getPostIds(likeCount + commentCount);
+  const commentText = "CFBR";
+
+  postUrns.slice(0, likeCount).forEach(postUrn => {
+    clickLikeButton(postUrn, 1);
+  });
+
+  postUrns.slice(likeCount, likeCount + commentCount).forEach(postUrn => {
+    commentPost(postUrn, commentText);
+  });
+
+  chrome.runtime.sendMessage({ action: "taskCompleted" });
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "interactWithPosts") {
+    interactWithPosts(message.likeCount, message.commentCount);
+    sendResponse({ status: "started", postCount: message.likeCount + message.commentCount });
+  }
+});
