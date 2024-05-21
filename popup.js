@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, (response) => {
                 if (response && response.status === 'started') {
                     window.close();
-                } else {
-                    console.error('Failed to start interaction with posts');
-                }
+                } 
             });
         });
     });
