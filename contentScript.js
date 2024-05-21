@@ -1,25 +1,21 @@
 function getPostIds(count) {
   const posts = document.querySelectorAll('div[data-urn]');
-  const postIds = Array.from(posts).slice(0, count).map(post => post.getAttribute('data-urn'));
-  return postIds;
+  return Array.from(posts).slice(0, count).map(post => post.getAttribute('data-urn'));
 }
 
-function clickLikeButton(postUrn, count) {
-  let clicked = 0;
-  const interval = setInterval(() => {
-    const postElement = document.querySelector(`div[data-urn="${postUrn}"]`);
-    if (postElement) {
-      const likeButton = postElement.querySelector('button[aria-label*="Like"][aria-pressed="false"]');
-      if (likeButton && clicked < count) {
-        likeButton.click();
-        clicked++;
-      } else if (clicked >= count) {
-        clearInterval(interval);
-      }
+function likePost(postUrn) {
+  const postElement = document.querySelector(`div[data-urn="${postUrn}"]`);
+  if (postElement) {
+    const likeButton = postElement.querySelector('button[aria-label*="Like"][aria-pressed="false"]');
+    if (likeButton) {
+      likeButton.click();
+      console.log(`Liked post: ${postUrn}`);
     } else {
-      clearInterval(interval);
+      console.log(`Like button already pressed or not found for post: ${postUrn}`);
     }
-  }, 1000);
+  } else {
+    console.log(`Post element not found for URN: ${postUrn}`);
+  }
 }
 
 function commentPost(postUrn, commentText) {
@@ -63,19 +59,19 @@ function interactWithPosts(likeCount, commentCount) {
   const commentText = "CFBR";
 
   postUrns.slice(0, likeCount).forEach(postUrn => {
-    clickLikeButton(postUrn, 1);
+    likePost(postUrn);
   });
 
   postUrns.slice(likeCount, likeCount + commentCount).forEach(postUrn => {
     commentPost(postUrn, commentText);
   });
 
-  chrome.runtime.sendMessage({ action: "taskCompleted" });
+  chrome.runtime.sendMessage({ action: 'taskCompleted' });
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "interactWithPosts") {
+  if (message.action === 'interactWithPosts') {
     interactWithPosts(message.likeCount, message.commentCount);
-    sendResponse({ status: "started", postCount: message.likeCount + message.commentCount });
+    sendResponse({ status: 'started', postCount: message.likeCount + message.commentCount });
   }
 });
